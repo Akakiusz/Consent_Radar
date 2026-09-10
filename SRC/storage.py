@@ -31,5 +31,15 @@ def init_db():
             """
         )
 
+def insert_domain(domain: str, source: str, category: str | None = None):
+    """Insert one observed domain."""
+    ts = datetime.now(timezone.utc).isoformat()
+    with _connect() as conn:
+        conn.execute(
+            "INSERT INTO domains (timestamp, domain, source, category) "
+            "VALUES (?, ?, ?, ?)",
+            (ts, domain, source, category),
+        )
+
 
 
