@@ -1,1 +1,1 @@
-"""Stage 1: traffic capture (DNS/SNI). To be implemented."""
+"""Stage 4: Dash dashboard — visualise which domains apps contact, and how often."""
