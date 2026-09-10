@@ -1,1 +1,1 @@
-"""Stage 1: traffic capture (DNS/SNI). To be implemented."""
+"""Stage 2: SQLite persistence — read/write captured domains."""
