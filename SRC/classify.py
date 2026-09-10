@@ -1,1 +1,1 @@
-"""Stage 1: traffic capture (DNS/SNI). To be implemented."""
+"""Stage 3: ML classification layer — group domains, detect tracker-like patterns."""
