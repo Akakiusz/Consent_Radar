@@ -1,1 +1,1 @@
-"""Stage 1: traffic capture (DNS/SNI). To be implemented."""
+"""Stage 2: tracker enrichment — flag each domain against public tracker lists."""
