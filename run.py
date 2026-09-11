@@ -1,7 +1,11 @@
-"""Consent Radar entry point. Scaffold only for now."""
+"""Consent Radar entry point."""
+
+import capture
+
 
 def main():
-    print("Consent Radar — scaffold OK. Next stage: capture.")
+    capture.run()
+
 
 if __name__ == "__main__":
     main()
