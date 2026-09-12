@@ -50,6 +50,17 @@ def enrich_all():
     trackers = load_trackers()
     rows = storage.fetch_all()
 
+# Persist tracker/other labels back into the database.
+def write_categories():
+    """Label every distinct captured domain and save it to the DB."""
+    trackers = load_trackers()
+    rows = storage.fetch_all()
+    seen = {domain: categorise(domain, trackers)
+            for _ts, domain, _source, _cat in rows}
+    for domain, cat in seen.items():
+        storage.update_category(domain, cat)
+    print(f"Updated categories for {len(seen)} distinct domains.")
+
     seen = {}
     for _ts, domain, _source, _cat in rows:
         if domain not in seen:
