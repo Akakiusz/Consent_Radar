@@ -26,7 +26,7 @@ Early development. See milestones below.
 
 - [x] Stage 0 — project scaffold
 - [x] Stage 1 — traffic capture
-- [ ] Stage 2 — tracker enrichment
+- [x] Stage 2 — tracker enrichment
 - [ ] Stage 3 — ML classification layer
 - [ ] Stage 4 — dashboard
 - [ ] Stage 5 — polish & tests
