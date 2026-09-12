@@ -43,6 +43,16 @@ def insert_domain(domain: str, source: str, category=None):
             "VALUES (?, ?, ?, ?)",
             (ts, domain, source, category),
         )
+
+# Update the category label for all rows matching a given domain.
+def update_category(domain, category):
+    """Set the category for every row with this domain."""
+    with _connect() as conn:
+        conn.execute(
+            "UPDATE domains SET category = ? WHERE domain = ?",
+            (category, domain),
+        )
+
 # Fetch all rows from the domains table, ordered by id (oldest first).
 def fetch_all():
     """Return all rows as a list of tuples."""
