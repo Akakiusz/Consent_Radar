@@ -1,4 +1,4 @@
-"""Stage 1: traffic capture (DNS/SNI). To be implemented."""
+"""Stage 1: traffic capture (DNS/SNI) — extract domains from live traffic."""
 
 # Import pyshark for packet capture and analysis
 import pyshark
