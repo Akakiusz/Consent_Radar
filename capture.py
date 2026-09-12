@@ -6,7 +6,7 @@ import pyshark
 import config
 import storage
 
-def _extract_dns(packet) -> str | None:
+def _extract_dns(packet):
     """Return the queried domain from a DNS packet, or None."""
     try:
         return packet.dns.qry_name
@@ -14,7 +14,7 @@ def _extract_dns(packet) -> str | None:
         return None
 
 
-def _extract_sni(packet) -> str | None:
+def _extract_sni(packet):
     """Return the SNI hostname from a TLS ClientHello, or None."""
     # Field name is often tls.handshake.extensions_server_name;
     # pyshark exposes it with underscores. VERIFY on your system.
@@ -23,7 +23,7 @@ def _extract_sni(packet) -> str | None:
     except AttributeError:
         return None
 
-def run(packet_limit: int | None = None):
+def run(packet_limit=None):
     """Capture live traffic and store observed domains.
 
     packet_limit: stop after N packets (None = run until interrupted).
