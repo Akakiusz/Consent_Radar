@@ -34,7 +34,7 @@ def init_db():
             """
         )
 # Define a function to insert a domain into the database with its source and optional category.
-def insert_domain(domain: str, source: str, category: str | None = None):
+def insert_domain(domain: str, source: str, category=None):
     """Insert one observed domain."""
     ts = datetime.now(timezone.utc).isoformat()
     with _connect() as conn:
