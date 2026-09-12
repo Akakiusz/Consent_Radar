@@ -1,6 +1,7 @@
 """Stage 2: SQLite persistence — read/write captured domains."""
 
 # Import standard libraries
+import os
 import sqlite3
 from contextlib import contextmanager
 from datetime import datetime, timezone
@@ -50,3 +51,4 @@ def fetch_all():
             "SELECT timestamp, domain, source, category FROM domains "
             "ORDER BY id"
         ).fetchall()
+
