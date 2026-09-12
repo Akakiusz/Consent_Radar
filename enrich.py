@@ -23,7 +23,7 @@ def load_trackers(path="data/trackers_raw.txt"):
                 trackers.add(parts[1].lower())
     return trackers
 
-# Define a function to check if a domain or any of its parent domains are in the tracker set.
+# Check if a domain or any of its parent domains are in the tracker set.
 def is_tracker(domain, trackers):
     """True if the domain, or any parent domain, is in the tracker set.
 
@@ -39,27 +39,16 @@ def is_tracker(domain, trackers):
             return True
     return False
 
-# Define a function to categorize a domain as 'tracker' or 'other' based on the tracker list.
+# Categorise a domain as 'tracker' or 'other' based on the tracker list.
 def categorise(domain, trackers):
     """Return a simple category label for a domain."""
     return "tracker" if is_tracker(domain, trackers) else "other"
 
-# Define a function to enrich all captured domains, categorize them, and print a summary.
+# Enrich all captured domains, categorise them, and print a summary.
 def enrich_all():
     """Read distinct captured domains, label them, print a summary."""
     trackers = load_trackers()
     rows = storage.fetch_all()
-
-# Persist tracker/other labels back into the database.
-def write_categories():
-    """Label every distinct captured domain and save it to the DB."""
-    trackers = load_trackers()
-    rows = storage.fetch_all()
-    seen = {domain: categorise(domain, trackers)
-            for _ts, domain, _source, _cat in rows}
-    for domain, cat in seen.items():
-        storage.update_category(domain, cat)
-    print(f"Updated categories for {len(seen)} distinct domains.")
 
     seen = {}
     for _ts, domain, _source, _cat in rows:
@@ -75,6 +64,18 @@ def write_categories():
         mark = "🚩" if cat == "tracker" else "  "
         print(f"{mark} [{cat:7}] {domain}")
 
+# Persist tracker/other labels back into the database.
+def write_categories():
+    """Label every distinct captured domain and save it to the DB."""
+    trackers = load_trackers()
+    rows = storage.fetch_all()
+    seen = {domain: categorise(domain, trackers)
+            for _ts, domain, _source, _cat in rows}
+    for domain, cat in seen.items():
+        storage.update_category(domain, cat)
+    print(f"Updated categories for {len(seen)} distinct domains.")
+
 # Run the enrichment process if this script is executed directly.
 if __name__ == "__main__":
     enrich_all()
+    write_categories()
