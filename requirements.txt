@@ -2,4 +2,5 @@ pyshark==0.6
 pandas
 scikit-learn
 dash
-plotlymatplotlib
+plotly
+matplotlib
