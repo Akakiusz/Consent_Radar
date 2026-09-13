@@ -5,6 +5,7 @@ and presents it interactively. Static read with a manual refresh button; not
 auto-updating live (see README limitations).
 """
 
+# Import standard libraries
 import sqlite3
 
 import pandas as pd
@@ -13,7 +14,8 @@ from dash import Dash, dcc, html, dash_table, Input, Output
 
 import config
 
-
+# Load one aggregated row per domain from the database, with contact count,
+# category label, and anomaly score.
 def load_data():
     """Read one aggregated row per domain from the database."""
     conn = sqlite3.connect(config.DB_PATH)
@@ -36,7 +38,7 @@ def load_data():
 app = Dash(__name__)
 app.title = "Consent Radar"
 
-
+# Build the dashboard layout with summary stats, a bar chart, and a sortable table.
 def build_layout():
     df = load_data()
     total_domains = len(df)
@@ -92,12 +94,13 @@ def build_layout():
 
 app.layout = build_layout
 
-
+# Callback to refresh the bar chart and table when the "Refresh" button is clicked.
 @app.callback(
     Output("bar", "figure"),
     Output("table", "data"),
     Input("refresh", "n_clicks"),
 )
+# CRefresh the bar chart and table when the "Refresh" button is clicked.
 def refresh(_n_clicks):
     df = load_data()
     top = df.head(15)
