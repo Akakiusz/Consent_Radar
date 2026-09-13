@@ -11,12 +11,12 @@ from sklearn.preprocessing import StandardScaler
 
 import storage
 
-# Define a helper function to parse ISO timestamp strings into datetime objects.
+# Parse ISO timestamp strings into datetime objects.
 def _parse(ts):
     """Parse an ISO timestamp string to a datetime."""
     return datetime.fromisoformat(ts)
 
-# Define a helper function to extract behavioural features from captured rows.
+# Extract behavioural features from captured rows.
 def extract_features():
     """Turn captured rows into per-domain behavioural features.
 
@@ -40,6 +40,8 @@ def extract_features():
         times.sort()
         count = len(times)
         span = (times[-1] - times[0]).total_seconds()
+        # rate is only meaningful over a real time window; sub-second spans
+        # produce misleading spikes, so treat them as "no meaningful rate"
         rate = count / (span / 60) if span >= 1.0 else 0.0
 
         # regularity from gaps between consecutive contacts
@@ -54,27 +56,24 @@ def extract_features():
 
     return domains, np.array(feats, dtype=float)
 
-# def run_isolation_forest(features):
+# Option B: anomaly score per domain (higher = more outlier-like).
 def run_isolation_forest(features):
-    """Option B: anomaly score per domain (higher = more outlier-like)."""
+    """Anomaly score per domain (higher = more outlier-like)."""
     X = StandardScaler().fit_transform(features)
     model = IsolationForest(random_state=42, contamination="auto")
     model.fit(X)
     # score_samples: lower = more anomalous. Negate so higher = more anomalous.
     return -model.score_samples(X)
 
-# Def run_clustering(features, n_clusters=3):
+# Option A: behavioural cluster label per domain.
 def run_clustering(features, n_clusters=3):
-    """Option A: behavioural cluster label per domain.
-
-    n_clusters is a guess; with few domains, treat clusters as illustrative.
-    """
+    """Cluster label per domain. With few domains, treat as illustrative."""
     X = StandardScaler().fit_transform(features)
     k = min(n_clusters, len(features))  # can't have more clusters than points
     model = KMeans(n_clusters=k, random_state=42, n_init=10)
     return model.fit_predict(X)
 
-# def main() is defined in classify.py, which is the entry point for running the behavioural analysis. It extracts features from the captured domains, runs anomaly detection and clustering, and prints a summary of the results.
+# Print a summary of anomaly scores and clusters, sorted by anomaly.
 def main():
     domains, features = extract_features()
     if len(domains) < 3:
@@ -98,6 +97,19 @@ def main():
     print("\nNote: 'anom' = review-priority (higher = more unusual pattern). "
           "'clust' = behavioural group. Small sample — triage aid, not a verdict.")
 
+# Persist anomaly scores to the DB so the dashboard can read them.
+def write_scores():
+    """Save each domain's anomaly score to the database."""
+    domains, features = extract_features()
+    if len(domains) < 3:
+        print("Not enough domains to score.")
+        return
+    anomaly = run_isolation_forest(features)
+    for domain, score in zip(domains, anomaly):
+        storage.update_score(domain, float(score))
+    print(f"Saved anomaly scores for {len(domains)} domains.")
+
 
 if __name__ == "__main__":
     main()
+    write_scores()
