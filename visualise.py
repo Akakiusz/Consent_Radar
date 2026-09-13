@@ -50,3 +50,7 @@ def main():
     plt.savefig("data/stage3_visualisation.png", dpi=120)
     print("Saved data/stage3_visualisation.png")
     plt.show()
+
+
+if __name__ == "__main__":
+    main()
