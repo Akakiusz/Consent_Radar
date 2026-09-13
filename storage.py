@@ -69,6 +69,6 @@ def fetch_all():
     """Return all rows as a list of tuples."""
     with _connect() as conn:
         return conn.execute(
-            "SELECT timestamp, domain, source, category FROM domains "
+            "SELECT timestamp, domain, source, category, score FROM domains "
             "ORDER BY id"
         ).fetchall()
