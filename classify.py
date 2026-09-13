@@ -40,7 +40,7 @@ def extract_features():
         times.sort()
         count = len(times)
         span = (times[-1] - times[0]).total_seconds()
-        rate = count / (span / 60) if span > 0 else 0.0
+        rate = count / (span / 60) if span >= 1.0 else 0.0
 
         # regularity from gaps between consecutive contacts
         if count > 2 and span > 0:
