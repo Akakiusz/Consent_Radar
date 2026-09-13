@@ -29,11 +29,13 @@ def init_db():
                 timestamp TEXT NOT NULL,
                 domain    TEXT NOT NULL,
                 source    TEXT NOT NULL,   -- 'dns' or 'sni'
-                category  TEXT              -- filled in later stages
+                category  TEXT,            -- 'tracker' or 'other'
+                score     REAL             -- behavioural anomaly score.   
             )
             """
-        )
-# Define a function to insert a domain into the database with its source and optional category.
+        ) # added REAL for score to allow decimal values
+
+# Insert a domain into the database with its source and optional category.
 def insert_domain(domain: str, source: str, category=None):
     """Insert one observed domain."""
     ts = datetime.now(timezone.utc).isoformat()
@@ -53,6 +55,15 @@ def update_category(domain, category):
             (category, domain),
         )
 
+# Store a behavioural anomaly score for a domain.
+def update_score(domain, score):
+    """Set the anomaly score for every row with this domain."""
+    with _connect() as conn:
+        conn.execute(
+            "UPDATE domains SET score = ? WHERE domain = ?",
+            (score, domain),
+        )
+
 # Fetch all rows from the domains table, ordered by id (oldest first).
 def fetch_all():
     """Return all rows as a list of tuples."""
@@ -61,4 +72,3 @@ def fetch_all():
             "SELECT timestamp, domain, source, category FROM domains "
             "ORDER BY id"
         ).fetchall()
-
