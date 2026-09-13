@@ -47,8 +47,17 @@ def main():
                     fontsize=8, ha="right")
 
     plt.tight_layout()
-    plt.savefig("data/stage3_visualisation.png", dpi=120)
-    print("Saved data/stage3_visualisation.png")
+
+    # save the linear version first (outlier towers above everything)
+    plt.savefig("data/stage3_visualisation_linear.png", dpi=120)
+    print("Saved data/stage3_visualisation_linear.png")
+
+    # then switch to log scale to make the lower cluster readable too
+    for ax in (ax1, ax2):
+        ax.set_yscale("log")
+    plt.savefig("data/stage3_visualisation_log.png", dpi=120)
+    print("Saved data/stage3_visualisation_log.png")
+
     plt.show()
 
 
