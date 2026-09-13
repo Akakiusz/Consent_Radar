@@ -54,7 +54,7 @@ def extract_features():
 
     return domains, np.array(feats, dtype=float)
 
-Def run_isolation_forest(features):
+# def run_isolation_forest(features):
 def run_isolation_forest(features):
     """Option B: anomaly score per domain (higher = more outlier-like)."""
     X = StandardScaler().fit_transform(features)
