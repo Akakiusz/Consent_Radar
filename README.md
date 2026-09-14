@@ -126,6 +126,26 @@ python dashboard.py
 
 Optional: `python visualise.py` regenerates the Stage 3 comparison figures.
 
+### Running it again
+
+The database is **cumulative** — running the capture again adds to the existing
+data rather than replacing it.
+
+- **To build up a longer picture over time**, just run the four steps again.
+  More data makes the behavioural analysis stronger (see Limitations).
+- **To analyse only a fresh session**, delete the database first:
+
+  ```bash
+  rm data/captured.db
+  python run.py
+  python enrich.py
+  python classify.py
+  python dashboard.py
+  ```
+
+Re-run `enrich.py` and `classify.py` after any new capture so the tracker flags
+and anomaly scores reflect the latest data before viewing the dashboard.
+
 ---
 
 ## Tech stack
@@ -153,6 +173,27 @@ Optional: `python visualise.py` regenerates the Stage 3 comparison figures.
 
 ---
 
+## Possible future work
+
+These are honest next steps, not commitments — the project is a working
+prototype, and each item below would strengthen it:
+
+- **Longer, multi-session capture** — the current analysis rests on a single
+  short session. More data would make the behavioural clustering meaningful (it
+  currently splits by capture time-span, a small-sample artifact).
+- **Single-command pipeline** — chain capture → enrich → classify → dashboard
+  into one launcher, so it runs without four separate commands.
+- **Auto-detect the network interface** — `en0` is currently hardcoded for
+  macOS; detecting it would help on other setups.
+- **Cross-platform testing** — capture has only been verified on macOS; Windows
+  and Linux would need their own interface and permission handling.
+- **Live-updating dashboard** — the dashboard currently reads a snapshot with a
+  manual refresh; auto-refresh during capture would make it truly "live".
+- **Richer behavioural features** — e.g. periodicity detection, to separate
+  scheduled telemetry from user-driven bursts more sharply.
+
+---
+
 ## Status
 
 - [x] Stage 0 — project scaffold
@@ -160,4 +201,4 @@ Optional: `python visualise.py` regenerates the Stage 3 comparison figures.
 - [x] Stage 2 — tracker enrichment
 - [x] Stage 3 — behavioural anomaly scoring + comparison visualisation
 - [x] Stage 4 — interactive dashboard
-- [ ] Stage 5 — polish & tests
+- [x] Stage 5 — polish, docs & tests
