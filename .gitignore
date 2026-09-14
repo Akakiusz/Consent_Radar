@@ -225,9 +225,9 @@ __pycache__/
 venv/
 env/
 
-# Dane prywatne — NIE commitować
+# Runtime data — never commit
 data/captured.db
-data/*.log
+data/trackers_raw.txt
 *.pcap
 
 # IDE / macOS
