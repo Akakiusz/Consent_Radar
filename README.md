@@ -148,6 +148,50 @@ and anomaly scores reflect the latest data before viewing the dashboard.
 
 ---
 
+## Standalone Windows executable
+
+Consent Radar can be packaged into a single `.exe` that runs without a Python
+installation. This is handy for running it on a machine that doesn't have the
+project set up.
+
+### Requirements on the target machine
+
+- **Wireshark** must be installed (Consent Radar uses its `tshark` component to
+  capture traffic). During Wireshark setup, keep **Npcap** selected — it's the
+  driver that makes packet capture work. The build locates `tshark`
+  automatically in the common install paths.
+- **Administrator rights** to run the capture.
+
+The network interface is detected automatically — the app briefly probes the
+available adapters and picks the one with live traffic, so there's nothing to
+configure by hand.
+
+### Building the executable
+
+From the project root, with the dependencies installed:
+
+```bash
+pip install pyinstaller
+pyinstaller --onefile --name ConsentRadar ^
+    --collect-all pyshark --collect-all dash --collect-all plotly ^
+    --collect-all scipy --collect-all sklearn ^
+    --exclude-module sqlalchemy run.py
+```
+
+The result is `dist/ConsentRadar.exe`.
+
+### Running it
+
+Place the tracker blocklist next to where you run the executable (the enrich
+stage reads `data/trackers_raw.txt`), then run the `.exe` from a terminal with
+administrator rights. It captures traffic, labels trackers, scores domains, and
+opens the dashboard at http://127.0.0.1:8050 — the same pipeline as `run.py`.
+
+> **Note:** the executable bundles scientific libraries (scikit-learn, scipy,
+> Dash), so it is large (a few hundred MB). It is not committed to this
+> repository; build it locally with the command above.
+
+
 ## Tech stack
 
 - **Capture:** pyshark (tshark wrapper), reading DNS + TLS SNI
