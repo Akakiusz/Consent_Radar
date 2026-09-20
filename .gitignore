@@ -234,3 +234,7 @@ data/trackers_raw.txt
 .vscode/
 .idea/
 .DS_Store
+# PyInstaller
+build/
+dist/
+*.spec
