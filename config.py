@@ -2,7 +2,7 @@
 
 # Network interface to listen on (verify the name on your system:
 # on macOS it's usually en0; check with `ifconfig` or in tshark)
-CAPTURE_INTERFACE = None  # None means auto-detect
+CAPTURE_INTERFACE = "WiFi"
 
 # Path to tshark.exe (Wireshark's command-line tool).
 # Needed on this machine because Wireshark is installed on D:, not in the
