@@ -6,6 +6,7 @@ import pyshark
 import config
 import storage
 
+
 def _extract_dns(packet):
     """Return the queried domain from a DNS packet, or None."""
     try:
@@ -23,6 +24,7 @@ def _extract_sni(packet):
     except AttributeError:
         return None
 
+
 def run(packet_limit=None):
     """Capture live traffic and store observed domains.
 
@@ -31,11 +33,12 @@ def run(packet_limit=None):
     storage.init_db()
 
     capture = pyshark.LiveCapture(
-        interface=config.CAPTURE_INTERFACE,
+        interface=config.get_interface(),
         display_filter="dns or tls.handshake.type == 1",
+        tshark_path=config.TSHARK_PATH,
     )
 
-    print(f"Listening on {config.CAPTURE_INTERFACE} … Ctrl+C to stop.")
+    print(f"Listening on {config.get_interface()} … Ctrl+C to stop.")
 
     count = 0
     try:
